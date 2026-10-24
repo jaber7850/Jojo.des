@@ -4,9 +4,9 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import discord
 from discord.ext import commands
 import google.generativeai as genai
-from gtts import gTTS
+from gTTS import gTTS
 
-# سيرفر وهمي لتجاوز مشكلة المنفذ في Render
+# سيرفر وهمي في الخلفية لتجاوز فحص المنفذ في Render
 def run_dummy_server():
     class SimpleHandler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -22,6 +22,7 @@ def run_dummy_server():
 
 threading.Thread(target=run_dummy_server, daemon=True).start()
 
+# إعداد الصلاحيات للبوت
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
@@ -34,8 +35,8 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    # استخدام الصيغة الأحدث والأكثر توافقاً للموديل
-    gemini_model = genai.GenerativeModel("gemini-1.5-flash-latest")
+    # الموديل الحديث والمستقر
+    gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
 @bot.event
 async def on_ready():
@@ -50,9 +51,11 @@ async def ask(ctx, *, prompt: str):
         
         await ctx.send(f"**Reply:**\n{reply_text}")
         
+        # تحويل النص إلى صوت
         tts = gTTS(text=reply_text, lang='ar')
         tts.save("response.mp3")
         
+        # الانضمام للروم الصوتي وتشغيل الصوت إذا كان المستخدم في روم
         if ctx.author.voice:
             channel = ctx.author.voice.channel
             if not ctx.voice_client:
