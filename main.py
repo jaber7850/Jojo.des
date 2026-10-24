@@ -11,10 +11,13 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ضع مفتاح جمناي هنا بين علامتي التنصيص
-GEMINI_API_KEY = "AQ.Ab8RN6La-myGTydWnLBH7EbQloOD7u9uOAN_bOuRbWuMfri-2g"
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel("gemini-pro")
+# جلب المفاتيح من المتغيرات البيئية في Render
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+TOKEN = os.getenv("DISCORD_TOKEN")
+
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel("gemini-pro")
 
 @bot.event
 async def on_ready():
@@ -56,5 +59,7 @@ async def leave(ctx):
     else:
         await ctx.send("Bot is not in a voice channel.")
 
-TOKEN = "MTU2MzMyNDQwMTkzODcyNjk1Mw.G8AIIY.M8AvbxqlRtitG8UBA7v8gqbWgf0Tj8sUuSX-bU"
-bot.run(TOKEN)
+if TOKEN:
+    bot.run(TOKEN)
+else:
+    print("Error: DISCORD_TOKEN is missing from Environment Variables.")
