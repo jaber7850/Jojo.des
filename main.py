@@ -36,7 +36,7 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel("gemini-pro")
+    gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
 @bot.event
 async def on_ready():
