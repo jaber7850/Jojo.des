@@ -6,7 +6,7 @@ from discord.ext import commands
 import google.generativeai as genai
 from gtts import gTTS
 
-# سيرفر وهمي صغير لفتح المنفذ الذي تطلبه منصة Render
+# سيرفر وهمي لتجاوز مشكلة المنفذ في Render
 def run_dummy_server():
     class SimpleHandler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -14,13 +14,12 @@ def run_dummy_server():
             self.end_headers()
             self.wfile.write(b"Bot is alive!")
         def log_message(self, format, *args):
-            pass # لمنع زحمة السجلات
+            pass
 
     port = int(os.environ.get("PORT", 10000))
     server = HTTPServer(("0.0.0.0", port), SimpleHandler)
     server.serve_forever()
 
-# تشغيل السيرفر الوهمي في الخلفية
 threading.Thread(target=run_dummy_server, daemon=True).start()
 
 intents = discord.Intents.default()
@@ -30,13 +29,13 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# جلب المفاتيح من المتغيرات البيئية في Render
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+    # استخدام الصيغة الأحدث والأكثر توافقاً للموديل
+    gemini_model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 @bot.event
 async def on_ready():
