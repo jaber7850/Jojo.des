@@ -12,7 +12,7 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # ضع مفتاح جمناي هنا بين علامتي التنصيص
-GEMINI_API_KEY = "ضع_مفتاح_جمناي_هنا"
+GEMINI_API_KEY = "AQ.Ab8RN6La-myGTydWnLBH7EbQloOD7u9uOAN_bOuRbWuMfri-2g"
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-pro")
 
